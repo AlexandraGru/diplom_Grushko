@@ -9,7 +9,11 @@ from .database import Base
 
 class UserRole(PyEnum):
     USER = "user"
-    ADMIN = "admin" 
+    ADMIN = "admin"
+
+class CustomerType(PyEnum):
+    LEGAL_ENTITY = "legal_entity"
+    INDIVIDUAL = "individual" 
 
 class User(Base): 
     __tablename__ = "users"
@@ -47,7 +51,7 @@ class Customer(Base):
     id = Column(UUID(as_uuid=True), primary_key=True, default=uuid4, index=True) 
     name = Column(String(200), nullable=False)
     inn = Column(String(12), nullable=False, index=True)
-    customer_type = Column(String(50), nullable=False)
+    customer_type = Column(Enum(CustomerType, native_enum=False, length=50), nullable=False)
     user_id = Column(UUID(as_uuid=True), ForeignKey("users.id", ondelete="CASCADE"), nullable=False, index=True)
    
     user = relationship("User", back_populates="customers")
@@ -58,7 +62,7 @@ class Customer(Base):
     )
     
     def __repr__(self):
-        return f"<Customer(id={self.id}, name={self.name}, inn={self.inn})>"
+        return f"<Customer(id={self.id}, name={self.name}, inn={self.inn}, type={self.customer_type.value})>"
 
 class Order(Base): 
     __tablename__ = "orders"
