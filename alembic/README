@@ -1,0 +1,5 @@
+Generic single-database configuration with an async focus.
+
+This is a minimal Alembic setup for a single database.  For more
+complex setups, see the other example templates.
+
