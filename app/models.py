@@ -13,7 +13,7 @@ class UserRole(PyEnum):
 
 class CustomerType(PyEnum):
     LEGAL_ENTITY = "legal_entity"
-    INDIVIDUAL = "individual" 
+    INDIVIDUAL = "individual"
 
 class User(Base): 
     __tablename__ = "users"
@@ -37,7 +37,7 @@ class Product(Base):
     id = Column(UUID(as_uuid=True), primary_key=True, default=uuid4, index=True) 
     name = Column(String(200), nullable=False)
     price = Column(Numeric(10, 2), nullable=False)
-    quantity = Column(Integer, nullable=False, default=0)
+    is_countable = Column(Boolean, nullable=False, default=True)  # True - исчисляемый, False - неисчисляемый
     user_id = Column(UUID(as_uuid=True), ForeignKey("users.id", ondelete="CASCADE"), nullable=False, index=True)
     
     user = relationship("User", back_populates="products")
