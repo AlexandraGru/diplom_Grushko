@@ -9,3 +9,8 @@ alembic revision --autogenerate -m "Initial migration"
 
 Чтобы применить миграции 
 alembic upgrade head
+
+
+// Перезапись миграций (удалит все данные не из миграций)
+alembic downgrade base
+alembic upgrade head

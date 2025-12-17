@@ -51,7 +51,8 @@ def upgrade() -> None:
     sa.Column('user_id', sa.UUID(), nullable=False),
     sa.ForeignKeyConstraint(['user_id'], ['users.id'], ondelete='CASCADE'),
     sa.PrimaryKeyConstraint('id'),
-    sa.UniqueConstraint('inn', 'user_id', name='uq_customer_inn_user')
+    sa.UniqueConstraint('inn', 'user_id', name='uq_customer_inn_user'),
+    sa.CheckConstraint("customer_type IN ('legal_entity', 'individual')", name='check_customer_type')
     )
     op.create_index(op.f('ix_customers_id'), 'customers', ['id'], unique=False)
     op.create_index(op.f('ix_customers_inn'), 'customers', ['inn'], unique=False)
@@ -60,7 +61,7 @@ def upgrade() -> None:
     sa.Column('id', sa.UUID(), nullable=False),
     sa.Column('name', sa.String(length=200), nullable=False),
     sa.Column('price', sa.Numeric(precision=10, scale=2), nullable=False),
-    sa.Column('quantity', sa.Integer(), nullable=False),
+    sa.Column('is_countable', sa.Boolean(), nullable=False, server_default='true'),
     sa.Column('user_id', sa.UUID(), nullable=False),
     sa.ForeignKeyConstraint(['user_id'], ['users.id'], ondelete='CASCADE'),
     sa.PrimaryKeyConstraint('id')

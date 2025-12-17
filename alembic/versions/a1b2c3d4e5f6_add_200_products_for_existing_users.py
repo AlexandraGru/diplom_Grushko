@@ -86,16 +86,16 @@ def upgrade() -> None:
         # Генерируем данные услуги
         product_id = str(uuid.uuid4())
         name = random.choice(PRODUCT_NAMES)
-        # Цена услуги от 500 до 50000 рублей (за услугу или час)
-        price = Decimal(str(round(random.uniform(500.0, 50000.0), 2)))
-        # Количество (часов, сеансов, услуг) от 1 до 100
-        quantity = random.randint(1, 100)
+        # Цена услуги от 500 до 50000 рублей, округленная до сотен
+        price = Decimal(str(round(random.uniform(500.0, 50000.0), -2)))
+        # Случайно определяем, исчисляемый ли продукт (80% - да)
+        is_countable = random.random() < 0.8
         
         products_data.append({
             'id': product_id,
             'name': name,
             'price': price,
-            'quantity': quantity,
+            'is_countable': is_countable,
             'user_id': user_id
         })
     
@@ -103,14 +103,14 @@ def upgrade() -> None:
     for product in products_data:
         connection.execute(
             sa.text("""
-                INSERT INTO products (id, name, price, quantity, user_id)
-                VALUES (:id, :name, :price, :quantity, :user_id)
+                INSERT INTO products (id, name, price, is_countable, user_id)
+                VALUES (:id, :name, :price, :is_countable, :user_id)
             """),
             {
                 'id': product['id'],
                 'name': product['name'],
                 'price': product['price'],
-                'quantity': product['quantity'],
+                'is_countable': product['is_countable'],
                 'user_id': product['user_id']
             }
         )
